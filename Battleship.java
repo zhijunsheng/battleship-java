@@ -10,9 +10,13 @@ class Battleship {
     brd.deploy();
     System.out.println(brd);
 
-    boolean gameOver = false;
+    boolean quitGame = false;
 
-    while (!gameOver) {
+    while (!quitGame) {
+      if (brd.gameOver()) {
+        System.out.println("You win! :D");
+        break;
+      } 
       System.out.println("Enter 2-digit xy to fire at (x, y), 111 to quit:");
       Scanner sc = new Scanner(System.in);
       int i = 111; // will trigger game over if not being changed
@@ -28,7 +32,7 @@ class Battleship {
         brd.fireAt(col, row);
         System.out.println(brd);
       } else {
-        gameOver = true;
+        quitGame = true;
       }
     }
   }
@@ -38,6 +42,7 @@ class BattleshipBoard {
   final static int ROWS = 10;
   final static int COLS = 10;
   boolean showShips = false;
+  private int hitCount = 0;
 
   private int[][] carrier = {
     {0, 0}, // col, row
@@ -70,6 +75,10 @@ class BattleshipBoard {
     {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
   };
+
+  boolean gameOver() {
+    return hitCount == carrier.length + submarine.length + battleship.length;
+  }
 
   void deploy() {
     int i = new Random().nextInt(carrier.length);
@@ -134,7 +143,10 @@ class BattleshipBoard {
 
   void fireAt(int col, int row) {
     bombed[col][row] = 1;
-    System.out.println("bombed at (" + col + ", " + row + ")");
+    if (isHit(col, row)) {
+      hitCount++;
+    }
+    System.out.println("bombed at (" + col + ", " + row + ") " + (isHit(col, row) ? "hit :-)" : "missed :-("));
   }
 
   private boolean isCarrier(int col, int row) {
@@ -164,12 +176,16 @@ class BattleshipBoard {
     return false;
   }
 
+  private boolean isHit(int col, int row) {
+    return isCarrier(col, row) || isSubmarine(col, row) || isBattleship(col, row);
+  }
+
   public String toString() {
     String brdStr = "";
     for (int row = 0; row < ROWS; row++) {
       for (int col = 0; col < COLS; col++) {
         if (bombed[col][row] == 1) {
-          if (isCarrier(col, row) || isSubmarine(col, row) || isBattleship(col, row)) {
+          if (isHit(col, row)) {
             brdStr += " x";
           } else {
             brdStr += " o";
