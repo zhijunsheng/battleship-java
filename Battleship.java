@@ -103,16 +103,22 @@ class BattleshipBoard {
     String brdStr = "";
     for (int row = 0; row < ROWS; row++) {
       for (int col = 0; col < COLS; col++) {
-        if (isCarrier(col, row)) {
-          brdStr += " c";
-        } else if (isSubmarine(col, row)) {
-          brdStr += " s";
-        } else if (isBattleship(col, row)) {
-          brdStr += " b";
-        } else if (bombed[col][row] == 1) {
-          brdStr += " O";
+        if (bombed[col][row] == 1) {
+          if (isCarrier(col, row) || isSubmarine(col, row) || isBattleship(col, row)) {
+            brdStr += " x";
+          } else {
+            brdStr += " o";
+          }
         } else {
-          brdStr += " .";
+          if (isCarrier(col, row)) {
+            brdStr += " c";
+          } else if (isSubmarine(col, row)) {
+            brdStr += " s";
+          } else if (isBattleship(col, row)) {
+            brdStr += " b";
+          } else {
+            brdStr += " .";
+          }
         }
       }
       brdStr += "\n";
