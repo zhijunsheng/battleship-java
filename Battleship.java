@@ -1,9 +1,33 @@
+import java.util.Scanner;
+import java.util.InputMismatchException;
+
 class Battleship {
 
   public static void main(String[] args) {
-    System.out.println("Hello Battleship");
     BattleshipBoard brd = new BattleshipBoard();
     System.out.println(brd);
+
+    boolean gameOver = false;
+
+    while (!gameOver) {
+      System.out.println("Enter 2-digit xy to fire at (x, y), 111 to quit:");
+      Scanner sc = new Scanner(System.in);
+      int i = 111; // will trigger game over if not being changed
+      try {
+        i = sc.nextInt();
+      } catch (InputMismatchException ime) {
+        // ignored
+      }
+      
+      if (i >= 0 && i <= 99) {
+        int col = i / 10;
+        int row = i % 10;
+        brd.fireAt(col, row);
+        System.out.println(brd);
+      } else {
+        gameOver = true;
+      }
+    }
   }
 }
 
@@ -28,6 +52,25 @@ class BattleshipBoard {
     {2, 4}, // col, row
     {3, 4},
   };
+
+  private int[][] bombed = {
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+  };
+
+  void fireAt(int col, int row) {
+    bombed[col][row] = 1;
+    System.out.println("bombed at (" + col + ", " + row + ")");
+  }
 
   private boolean isCarrier(int col, int row) {
     for (int cellIndex = 0; cellIndex < carrier.length; cellIndex++) {
@@ -66,6 +109,8 @@ class BattleshipBoard {
           brdStr += " s";
         } else if (isBattleship(col, row)) {
           brdStr += " b";
+        } else if (bombed[col][row] == 1) {
+          brdStr += " O";
         } else {
           brdStr += " .";
         }
