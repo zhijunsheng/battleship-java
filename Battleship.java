@@ -1,11 +1,13 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.util.Random;
 
 class Battleship {
 
   public static void main(String[] args) {
     BattleshipBoard brd = new BattleshipBoard();
-//    brd.showShips = true;
+    brd.showShips = true;
+    brd.deploy();
     System.out.println(brd);
 
     boolean gameOver = false;
@@ -68,6 +70,67 @@ class BattleshipBoard {
     {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
   };
+
+  void deploy() {
+    int i = new Random().nextInt(carrier.length);
+    System.out.println(i);
+    randomizeShips();
+  }
+
+  private void randomizeShips() {
+    do {
+      randomizeShip(carrier);
+      randomizeShip(submarine);
+      randomizeShip(battleship);
+    } while (shipsOverlapped() || shipsOutOfBound());
+  }
+  
+  private boolean shipsOverlapped() {
+    return overlapped(carrier, submarine) || overlapped(carrier, battleship) || overlapped(submarine, battleship);
+  }
+
+  private boolean overlapped(int[][] shipOne, int[][] shipTwo) {
+    for (int shipOneCell = 0; shipOneCell < shipOne.length; shipOneCell++) {
+      for (int shipTwoCell = 0; shipTwoCell < shipTwo.length; shipTwoCell++) {
+        if (shipOne[shipOneCell][0] == shipTwo[shipTwoCell][0] && shipOne[shipOneCell][1] == shipTwo[shipTwoCell][1] ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private void randomizeShip(int[][] ship) {
+    Random random = new Random();
+    int headCol = random.nextInt(COLS);
+    int headRow= random.nextInt(ROWS);
+    ship[0][0] = headCol;
+    ship[0][1] = headRow;
+    if (random.nextInt(100) % 2 == 0) {
+      for (int i = 1; i < ship.length; i++) {
+        ship[i][0] = ship[0][0] + i;
+        ship[i][1] = ship[0][1];
+      }
+    } else {
+      for (int i = 1; i < ship.length; i++) {
+        ship[i][0] = ship[0][0];
+        ship[i][1] = ship[0][1] + i;
+      }
+    }
+  }
+
+  private boolean shipsOutOfBound() {
+    return shipOutOfBound(carrier) || shipOutOfBound(submarine) || shipOutOfBound(battleship);
+  }
+
+  private boolean shipOutOfBound(int[][] ship) {
+    for (int cellIndex = 0; cellIndex < ship.length; cellIndex++) {
+      if (ship[cellIndex][0] < 0 || ship[cellIndex][0] >= COLS || ship[cellIndex][1] < 0 || ship[cellIndex][1] >= ROWS) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   void fireAt(int col, int row) {
     bombed[col][row] = 1;
