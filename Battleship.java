@@ -5,6 +5,7 @@ class Battleship {
 
   public static void main(String[] args) {
     BattleshipBoard brd = new BattleshipBoard();
+//    brd.showShips = true;
     System.out.println(brd);
 
     boolean gameOver = false;
@@ -34,6 +35,7 @@ class Battleship {
 class BattleshipBoard {
   final static int ROWS = 10;
   final static int COLS = 10;
+  boolean showShips = false;
 
   private int[][] carrier = {
     {0, 0}, // col, row
@@ -109,6 +111,8 @@ class BattleshipBoard {
           } else {
             brdStr += " o";
           }
+        } else if (!showShips) {
+          brdStr += " .";
         } else {
           if (isCarrier(col, row)) {
             brdStr += " c";
