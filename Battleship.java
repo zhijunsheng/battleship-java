@@ -173,12 +173,14 @@ class BattleshipBoard {
 
   public String toString() {
     String brdStr = "";
+    brdStr += "  ";
     for (int col = 0; col < COLS; col++) {
       brdStr += " " + col;
     }
     brdStr += "\n";
 
     for (int row = 0; row < ROWS; row++) {
+      brdStr += row + " ";
       for (int col = 0; col < COLS; col++) {
         if (bombed[col][row] == 1) {
           if (isHit(col, row)) {
