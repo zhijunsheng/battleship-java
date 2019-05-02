@@ -6,18 +6,15 @@ class Battleship {
 
   public static void main(String[] args) {
     BattleshipBoard brd = new BattleshipBoard();
-    brd.showShips = true;
     System.out.println(brd);
 
-    boolean quitGame = false;
-
-    while (!quitGame) {
+    Scanner sc = new Scanner(System.in);
+    while (true) {
       if (brd.gameOver()) {
         System.out.println("You win! :D");
         break;
       } 
       System.out.println("Enter 2-digit xy to fire at (x, y), 111 to quit:");
-      Scanner sc = new Scanner(System.in);
       int i = 111; // will trigger game over if not being changed
       try {
         i = sc.nextInt();
@@ -30,8 +27,14 @@ class Battleship {
         int row = i % 10;
         brd.fireAt(col, row);
         System.out.println(brd);
+      } else if (i == 999) {
+        brd.showShips = true;
+        System.out.println(brd);
+      } else if (i == 998) {
+        brd.showShips = false;
+        System.out.println(brd);
       } else {
-        quitGame = true;
+        break;
       }
     }
   }
