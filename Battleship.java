@@ -7,7 +7,6 @@ class Battleship {
   public static void main(String[] args) {
     BattleshipBoard brd = new BattleshipBoard();
     brd.showShips = true;
-    brd.deploy();
     System.out.println(brd);
 
     boolean quitGame = false;
@@ -71,16 +70,11 @@ class BattleshipBoard {
         bombed[col][row] = 0;
       }
     }
+    randomizeShips();
   }
 
   boolean gameOver() {
     return hitCount == carrier.length + submarine.length + battleship.length;
-  }
-
-  void deploy() {
-    int i = new Random().nextInt(carrier.length);
-    System.out.println(i);
-    randomizeShips();
   }
 
   private void randomizeShips() {
@@ -179,6 +173,11 @@ class BattleshipBoard {
 
   public String toString() {
     String brdStr = "";
+    for (int col = 0; col < COLS; col++) {
+      brdStr += " " + col;
+    }
+    brdStr += "\n";
+
     for (int row = 0; row < ROWS; row++) {
       for (int col = 0; col < COLS; col++) {
         if (bombed[col][row] == 1) {
