@@ -62,19 +62,16 @@ class BattleshipBoard {
     {3, 4},
   };
 
-  private int[][] bombed = {
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
+  private int[][] bombed; 
 
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0,  0, 0, 0, 0, 0},
-  };
+  BattleshipBoard() {
+    bombed = new int[ROWS][COLS];
+    for (int row = 0; row < ROWS; row++) {
+      for (int col = 0; col < COLS; col++) {
+        bombed[col][row] = 0;
+      }
+    }
+  }
 
   boolean gameOver() {
     return hitCount == carrier.length + submarine.length + battleship.length;
